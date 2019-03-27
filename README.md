@@ -51,5 +51,33 @@ Consider following and Generate a solution to find whether the system is in safe
 
 ### Problem 22
 
+Running the program on the above input
 
+```bash
+./solution22.out < in22.txt
+```
 
+If you want to compile it yourself, 
+
+```bash
+gcc solution22.c -o solution22.out
+```
+
+If you want to get a log of what program does and works, Compile with Verbose enbaled as 
+
+```bash
+gcc solution22.c -o solution22.out -DVERBOSE_ENABLED
+```
+
+Solution for the above Problem using the program is as follow :
+
+> No Dead Lock Found. System is in valid state if following order of process execution is followed : 
+	P0->P2->P3->P4->P1
+
+All the logs are printed via `stderr` so, you can redirect it into a file by running :
+
+```bash
+./solution22.c 2> logfile.txt
+```
+
+It will write all the logs in the file named `logfile.txt` and output will be displayed on the console.
