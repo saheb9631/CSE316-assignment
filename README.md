@@ -47,6 +47,38 @@ Consider following and Generate a solution to find whether the system is in safe
 
 ### Problem 11
 
+Running the program on the above input
+
+```bash
+./solution11.out < in11.txt
+```
+
+If you want to compile it yourself,
+
+```bash
+gcc solution11.c -o solution11.out
+```
+
+If you want to get a log of what program does and works, Compile with Verbose enabled as
+
+```bash
+gcc solution22.c -o solution22.out -DVERBOSE_ENABLED
+```
+
+Solution for the above problem using program is as follow :
+
+> Request to P0 Granted. It caused a DEADLOCK when the request was granted. 
+
+> Request to P1 Granted. System was in Safe State even after request was granted.
+
+All the logs are printed via `stderr` so, you can redirect it into a file by running :
+
+```bash
+./solution11.c 2> logfile.txt
+```
+
+It will write all the logs in the file named `logfile.txt` and output will be displayed on the console.
+
 
 
 ### Problem 22
@@ -81,3 +113,4 @@ All the logs are printed via `stderr` so, you can redirect it into a file by run
 ```
 
 It will write all the logs in the file named `logfile.txt` and output will be displayed on the console.
+
