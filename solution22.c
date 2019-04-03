@@ -54,7 +54,7 @@ struct system_state {
  * This is a function free all the dynamically allocated resources.
  * */
 void free_dynamic_resource() {
-  for (int a = 0; a <global_system_state->process_count; a++) {
+  for (int a = 0; a < global_system_state->process_count; a++) {
     free(global_system_state->allocation_table[a]);
     free(global_system_state->max_table[a]);
   }
