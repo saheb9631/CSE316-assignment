@@ -101,7 +101,8 @@ If you want to get a log of what program does and works, Compile with Verbose en
 gcc solution22.c -o solution22.out -DVERBOSE_ENABLED
 ```
 
-Solution for the above Problem using the program is as follow :
+![Imgur](https://i.imgur.com/sUyrEyW.png)
+
 
 > No Dead Lock Found. System is in valid state if following order of process execution is followed : 
 	P0->P2->P3->P4->P1
