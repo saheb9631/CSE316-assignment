@@ -65,7 +65,7 @@ If you want to get a log of what program does and works, Compile with Verbose en
 gcc solution22.c -o solution22.out -DVERBOSE_ENABLED
 ```
 
-Solution for the above problem using program is as follow :
+![](https://i.imgur.com/kx3CjNk.png)
 
 > Request to P0 Granted. It caused a DEADLOCK when the request was granted. 
 
