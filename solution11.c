@@ -28,28 +28,32 @@
   } while (false);
 #endif
 
-/**
+/*
  * This is a wrapper that will hold all the information about the current system
  * state
- * */
+ *
+ */
 struct system_state {
   int resource_count;
   int process_count;
-  int *avail_resource;
-  int **allocation_table;
-  int **max_table;
+  int* avail_resource;
+  int** allocation_table;
+  int** max_table;
 
 } * global_system_state, *global_transient_state;
 
+/*
+ * This is a wrapper that holds the request information that is made
+ */
 struct request {
   int process_id;
-  int *resource_requests;
+  int* resource_requests;
 
 } * request_info;
 
-/**
- * This is a function free all the dynamically allocated resources.
- * */
+/*
+ * This function free all the dynamically allocated resources.
+ */
 void free_dynamic_resource() {
   for (int a = 0; a < global_system_state->process_count; a++) {
     free(global_system_state->allocation_table[a]);
@@ -75,10 +79,10 @@ void input() {
   LOG("\nStarted input function...");
 
   global_system_state =
-      (struct system_state *)malloc(sizeof(struct system_state));
+      (struct system_state*)malloc(sizeof(struct system_state));
 
   global_transient_state =
-      (struct system_state *)malloc(sizeof(struct system_state));
+      (struct system_state*)malloc(sizeof(struct system_state));
 
   LOG("\nAllocated global_system_state variable...");
 
@@ -95,16 +99,16 @@ void input() {
   LOG("\nAllocating memory for allocation table...");
 
   global_system_state->allocation_table =
-      (int **)malloc(global_system_state->process_count * sizeof(int *));
+      (int**)malloc(global_system_state->process_count * sizeof(int*));
 
   global_transient_state->allocation_table =
-      (int **)malloc(global_transient_state->process_count * sizeof(int *));
+      (int**)malloc(global_transient_state->process_count * sizeof(int*));
 
   for (int a = 0; a < global_system_state->process_count; a++) {
     global_system_state->allocation_table[a] =
-        (int *)malloc(global_system_state->resource_count * sizeof(int));
+        (int*)malloc(global_system_state->resource_count * sizeof(int));
     global_transient_state->allocation_table[a] =
-        (int *)malloc(global_transient_state->resource_count * sizeof(int));
+        (int*)malloc(global_transient_state->resource_count * sizeof(int));
   }
 
   LOG("\nAllocated allocation table memory now reading...");
@@ -119,15 +123,15 @@ void input() {
   // Allocate memory for Max resource table
 
   global_system_state->max_table =
-      (int **)malloc(global_system_state->process_count * sizeof(int *));
+      (int**)malloc(global_system_state->process_count * sizeof(int*));
   global_transient_state->max_table =
-      (int **)malloc(global_transient_state->process_count * sizeof(int *));
+      (int**)malloc(global_transient_state->process_count * sizeof(int*));
 
   for (int a = 0; a < global_system_state->process_count; a++) {
     global_system_state->max_table[a] =
-        (int *)malloc(global_system_state->resource_count * sizeof(int));
+        (int*)malloc(global_system_state->resource_count * sizeof(int));
     global_transient_state->max_table[a] =
-        (int *)malloc(global_transient_state->resource_count * sizeof(int));
+        (int*)malloc(global_transient_state->resource_count * sizeof(int));
   }
 
   LOG("\nAllocated max table memory now reading...");
@@ -145,9 +149,9 @@ void input() {
   LOG("\nAllocating memory to avail_resources...");
   // Allocate memory for avail resource vector and list;
   global_system_state->avail_resource =
-      (int *)malloc(sizeof(int) * global_system_state->resource_count);
+      (int*)malloc(sizeof(int) * global_system_state->resource_count);
   global_transient_state->avail_resource =
-      (int *)malloc(sizeof(int) * global_transient_state->resource_count);
+      (int*)malloc(sizeof(int) * global_transient_state->resource_count);
 
   LOG("\nReading values to available_resources...");
 
@@ -172,7 +176,7 @@ a : available;
 b : allocated;
 c : required;
 */
-bool vec_math_is_allocatable(int *a, int *b, int *c, int len) {
+bool vec_math_is_allocatable(int* a, int* b, int* c, int len) {
   for (int iter = 0; iter < len; iter++)
     if (a[iter] + b[iter] < c[iter]) return false;
   return true;
@@ -183,7 +187,7 @@ a : available;
 b : allocated;
 c : required;
 */
-void vec_math_allocate_and_free(int *a, int *b, int *c, int len) {
+void vec_math_allocate_and_free(int* a, int* b, int* c, int len) {
   assert(vec_math_is_allocatable(a, b, c, len));
   for (int iter = 0; iter < len; iter++) {
     a[iter] += b[iter];
@@ -197,11 +201,16 @@ void vec_math_allocate_and_free(int *a, int *b, int *c, int len) {
  * c : max_limit
  */
 
-bool vec_math_should_grant(int *a, int *b, int *c, int len) {
+bool vec_math_should_grant(int* a, int* b, int* c, int len) {
   for (int t = 0; t < len; t++)
     if (a[t] + b[t] > c[t]) return false;
   return true;
 }
+
+/*
+ * This function restores the state to old state onces a request has been
+ * processed
+ */
 
 void restore() {
   LOG("\nRestoring Available Resource State to Global State...");
@@ -217,7 +226,10 @@ void restore() {
       global_transient_state->allocation_table[a][b] =
           global_system_state->allocation_table[a][b];
 }
-
+/*
+ * This function solves the state after the request has been granted and returns
+ * true if system is in stable state or else false if deadlock is encountered
+ */
 bool solve() {
   LOG("\nStarted solving the system...");
   int non_executed = global_system_state->process_count;
@@ -258,15 +270,19 @@ bool solve() {
   }
   return true;
 };
-/**
- * This shows the result of the state.
- * */
 
-void ask_request_count(int *target) {
+/*
+ * This asks the request count from user.
+ */
+
+void ask_request_count(int* target) {
   printf("\nHow many number of requests will arrive : ");
   scanf("%d", target);
 }
-
+/*
+ * This asks the actual request and solves the state and prints if it is safe
+ * state or not after request has been granted
+ */
 void ask_requests(int n) {
   for (int t = 0; t < n; t++) {
     printf("\nRequest %d : ", t + 1);
@@ -283,18 +299,18 @@ void ask_requests(int n) {
 
     printf("\nEnter %d space separated integers each for each resource type : ",
            global_system_state->resource_count);
-    request_info = (struct request *)malloc(sizeof(struct request));
+    request_info = (struct request*)malloc(sizeof(struct request));
     request_info->process_id = p_c;
     request_info->resource_requests =
-        (int *)malloc(sizeof(int) * global_system_state->resource_count);
+        (int*)malloc(sizeof(int) * global_system_state->resource_count);
 
     for (int a = 0; a < global_system_state->resource_count; a++)
       scanf("%d", &(request_info->resource_requests[a]));
 
     if (vec_math_should_grant(global_system_state->allocation_table[p_c],
-                                request_info->resource_requests,
-                                global_system_state->max_table[p_c],
-                                global_system_state->resource_count)) {
+                              request_info->resource_requests,
+                              global_system_state->max_table[p_c],
+                              global_system_state->resource_count)) {
       bool flag = true;
       for (int a = 0; a < global_system_state->resource_count; a++)
         if (global_transient_state->avail_resource[a] <
@@ -319,7 +335,9 @@ void ask_requests(int n) {
       }
 
       if (!solve())
-        printf("\nDEADLOCK : After Request was Granted the system went into DEADLOCK");
+        printf(
+            "\nDEADLOCK : After Request was Granted the system went into "
+            "DEADLOCK");
       else
         printf(
             "\nSystem has a Stable State even after the resource requested was "

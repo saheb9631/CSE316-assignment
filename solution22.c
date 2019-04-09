@@ -170,7 +170,11 @@ void vec_math_allocate_and_free(int *a, int *b, int *c, int len) {
     b[iter] = 0;
   }
 }
-
+/*
+ * This function solves the state and reports if a stable state is possible or
+ * not If a stable state exists, it sets the state otherwise frees the dynamic
+ * memory.
+ */
 void solve() {
   LOG("\nStarted solving the system...");
   int non_executed = global_system_state->process_count;
